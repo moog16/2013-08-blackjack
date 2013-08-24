@@ -8,11 +8,14 @@ class window.AppView extends Backbone.View
   '
 
   events:
-    "click .hit-button": -> @model.get('playerHand').hit()
+    "click .hit-button": 'hit'
     "click .stand-button": 'findWinner'
     "click .new-hand-button": -> @model.redeal()
 
-  initialize: -> @render()
+  initialize: -> 
+    @render()
+    console.log(@model.get('playerHand').hasBlackJack())
+    if @model.get('playerHand').hasBlackJack() then @findWinner()
 
   render: ->
     @$el.children().detach()
@@ -22,4 +25,11 @@ class window.AppView extends Backbone.View
 
   findWinner: ->
     winner = @model.findWinner()
-    alert(winner + 'won');
+    console.log(winner + ' won');
+
+  hit: ->
+    console.log('hit')
+    hasBlackJack = @model.get('playerHand').hit()
+    if hasBlackJack
+      console.log 'blackjack'
+      @findWinner()
