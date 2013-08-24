@@ -1,5 +1,10 @@
 class window.CardView extends Backbone.View
 
+  events:
+    'endHand': ->
+      console.log 'ending hand'
+      return
+
   className: 'card'
 
   template: _.template '<%= rankName %> of <%= suitName %>'
