@@ -13,10 +13,10 @@ class window.Hand extends Backbone.Collection
 
     if @isDealer
       that.where({revealed: false})[0].flip()
-      dealer17 = ->
-        if that.scores()[0] > 22 or that.scores()[1] > 22 then return
+      dealer17 = =>
+        if @.scores()[0] > 22 or @.scores()[1] > 22 then return
         else if findMax(that.scores()) < 17
-          that.hit()
+          @.hit()
           dealer17()
       dealer17()
     findMax @.scores()
@@ -29,7 +29,13 @@ class window.Hand extends Backbone.Collection
       user[0]
 
   hasBlackJack: ->
-    if findMax(@.scores()) is 21 then true else false
+    if findMax(@.scores()) is 21
+      true 
+      console.log 'has backjack'
+    else false
+
+  busted: ->
+    if @scores()[0] > 22 then true else false
 
   scores: ->
     hasAce = @reduce (memo, card) ->
@@ -39,4 +45,5 @@ class window.Hand extends Backbone.Collection
       score + if card.get 'revealed' then card.get 'value' else 0
     , 0
     if hasAce and @models[0].get('revealed') is true and @models[1].get('revealed') then [score, score+10] else [score]
+    
 

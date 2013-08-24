@@ -14,3 +14,20 @@
 .hand {
   overflow: auto;
 }
+
+.winnerText, .loserText, .pushText {
+  font-size: 40px;
+}
+
+.player-hand-container-status, .dealer-hand-container-status {
+  height: 50px;
+  display: block;
+}
+
+.winnerText {
+  color: green;
+}
+
+.loserText {
+  color: red;
+}

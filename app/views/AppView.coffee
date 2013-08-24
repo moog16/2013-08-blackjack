@@ -3,18 +3,21 @@ class window.AppView extends Backbone.View
   template: _.template '
     <button class="hit-button">Hit</button> <button class="stand-button">Stand</button>
     <button class="new-hand-button">New Hand</button>
+    <div class="player-hand-container-status"></div>
     <div class="player-hand-container"></div>
+    <div class="dealer-hand-container-status"></div>
     <div class="dealer-hand-container"></div>
   '
 
   events:
     "click .hit-button": 'hit'
     "click .stand-button": 'findWinner'
-    "click .new-hand-button": -> @model.redeal()
+    "click .new-hand-button": -> 
+      @model.redeal()
+      @render()
 
   initialize: -> 
     @render()
-    console.log(@model.get('playerHand').hasBlackJack())
     if @model.get('playerHand').hasBlackJack() then @findWinner()
 
   render: ->
@@ -24,12 +27,20 @@ class window.AppView extends Backbone.View
     @$('.dealer-hand-container').html new HandView(collection: @model.get 'dealerHand').el
 
   findWinner: ->
-    winner = @model.findWinner()
-    console.log(winner + ' won');
+    loser = winner = @model.findWinner()
+    winnerText = 'Winner'
+    loserText = 'Loser'
+    if winner is 'push'
+      winnerText = loserText = 'Push'
+      loser = 'dealer'
+      winner = 'player'
+
+    loser = if winner is 'player' then 'dealer' else 'player'
+    @$('.' + winner + '-hand-container-status').append '<span class="winnerText">' + winnerText + '</span>'
+    @$('.' + loser + '-hand-container-status').append '<span class="loserText">' + loserText + '</span>'
 
   hit: ->
-    console.log('hit')
     hasBlackJack = @model.get('playerHand').hit()
-    if hasBlackJack
-      console.log 'blackjack'
+    playerBusted = @model.get('playerHand').busted()
+    if hasBlackJack or playerBusted
       @findWinner()
